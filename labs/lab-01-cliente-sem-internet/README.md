@@ -18,7 +18,7 @@ Investigar a indisponibilidade de Internet utilizando uma abordagem de troublesh
 
 ## Topologia
 
-![Topologia da rede](topologia.png)
+![Topologia da rede](topologia.PNG)
 
 ## Equipamentos
 
