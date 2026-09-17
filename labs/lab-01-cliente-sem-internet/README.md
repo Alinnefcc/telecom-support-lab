@@ -14,11 +14,13 @@ Uma empresa cliente de um provedor de Internet entrou em contato informando que 
 
 ## Objetivo
 
-Investigar a indisponibilidade de Internet utilizando uma abordagem de troubleshooting por etapas, identificando os pontos de falha, realizando as correções necessárias e validando a conectividade ponta a ponta.
+Investigar a indisponibilidade de Internet utilizando uma abordagem de troubleshooting por etapas, identificar os pontos de falha, realizar as correções necessárias e validar a conectividade ponta a ponta.
 
 ## Topologia
 
-A topologia deste laboratório utiliza:
+![Topologia da rede](topologia.png)
+
+## Equipamentos
 
 - 1 PC
 - 1 Switch Cisco 2960
@@ -46,13 +48,9 @@ Comando:
 
 `ping 192.168.10.1`
 
-Resultado:
+Resultado: 100% de sucesso.
 
-100% de sucesso.
-
-Conclusão:
-
-A comunicação entre o PC1 e o gateway local estava funcionando.
+Conclusão: a comunicação entre o PC1 e o gateway local estava funcionando.
 
 ### Teste 2 — Router Cliente → Router ISP
 
@@ -60,13 +58,9 @@ Comando:
 
 `ping 203.0.113.1`
 
-Resultado:
+Resultado: 100% de sucesso.
 
-100% de sucesso.
-
-Conclusão:
-
-O enlace WAN entre o Router Cliente e o Router ISP estava funcionando.
+Conclusão: o enlace WAN entre o Router Cliente e o Router ISP estava funcionando.
 
 ### Teste 3 — Router ISP → Router Internet
 
@@ -74,65 +68,110 @@ Comando:
 
 `ping 198.51.100.2`
 
-Resultado:
+Resultado: 100% de sucesso.
 
-100% de sucesso.
+Conclusão: o enlace entre o Router ISP e o Router Internet estava funcionando.
 
-Conclusão:
+### Teste 4 — Router Cliente → Internet
 
-O enlace entre o Router ISP e o Router Internet estava funcionando.
+Comando:
+
+`ping 8.8.8.8`
+
+Resultado inicial: 0% de sucesso.
+
+Foi iniciada a investigação de roteamento.
 
 ## Falhas identificadas
 
-### Falha 1 — Ausência de rota padrão no Router Cliente
+### 1. Ausência de rota padrão no Router Cliente
 
 Foi identificado:
 
 `Gateway of last resort is not set`
 
-Foi configurada a rota padrão:
+Correção:
 
 `ip route 0.0.0.0 0.0.0.0 203.0.113.1`
 
-### Falha 2 — Gateway incorreto no Server
+### 2. Ausência de rota padrão no Router ISP
 
-O gateway do Server estava incorreto.
+O Router ISP não possuía uma rota para destinos externos.
 
-Foi corrigido para:
+Correção:
+
+`ip route 0.0.0.0 0.0.0.0 198.51.100.2`
+
+### 3. Gateway incorreto no Server
+
+O gateway configurado no Server estava incorreto.
+
+Correção:
 
 `8.8.8.1`
 
-### Falha 3 — Ausência de rota para a rede do cliente no Router ISP
+### 4. Ausência de rota para a LAN do cliente no Router ISP
 
-Foi configurada:
+O Router ISP não conhecia a rede `192.168.10.0/24`.
+
+Correção:
 
 `ip route 192.168.10.0 255.255.255.0 203.0.113.2`
 
-### Falha 4 — Ausência de rota de retorno no Router Internet
+### 5. Ausência de rota de retorno no Router Internet
 
-Foi configurada:
+O Router Internet não conhecia a rede `192.168.10.0/24`.
+
+Correção:
 
 `ip route 192.168.10.0 255.255.255.0 198.51.100.1`
 
+## Evidências
+
+As capturas utilizadas durante a investigação estão armazenadas na pasta `evidencias`.
+
+### 01 — PC1 → Gateway
+
+![PC1 pingando o gateway](evidencias/01-pc-gateway.png)
+
+### 02 — Router Cliente → Router ISP
+
+![Router Cliente pingando o Router ISP](evidencias/02-cliente-isp.png)
+
+### 03 — Router ISP → Router Internet
+
+![Router ISP pingando o Router Internet](evidencias/03-isp-internet.png)
+
+### 04 — Tabela de roteamento
+
+![Tabela de roteamento do Router Cliente](evidencias/04-show-ip-route.png)
+
+### 05 — Falha de conectividade
+
+![Falha de conectividade](evidencias/05-falha.png)
+
+### 06 — Validação final
+
+![Validação final da conectividade](evidencias/06-validacao-final.png)
+
 ## Validação final
 
-No PC1:
+Após as correções, foi realizado o teste de conectividade a partir do PC1:
 
 `ping 8.8.8.8`
 
-Resultado:
-
-Reply.
+Resultado: Reply.
 
 A conectividade ponta a ponta foi restabelecida.
 
 ## Diagnóstico final
 
-O problema envolvia falhas de configuração de roteamento e gateway.
+O incidente envolvia múltiplas falhas de configuração de rede.
 
-Durante a investigação foram identificados:
+Foram identificados:
 
 - ausência de rota padrão no Router Cliente;
+- ausência de rota padrão no Router ISP;
 - gateway incorreto no Server;
 - ausência de rota para a LAN do cliente no Router ISP;
 - ausência de rota de retorno no Router Internet.
@@ -141,6 +180,7 @@ Durante a investigação foram identificados:
 
 - IPv4
 - Endereçamento IP
+- Máscara de rede
 - Gateway
 - ICMP
 - Ping
@@ -150,4 +190,9 @@ Durante a investigação foram identificados:
 - Rota padrão
 - Rota de retorno
 - Troubleshooting
+- Diagnóstico por evidências
 - Validação ponta a ponta
+
+## Arquivo do laboratório
+
+[Laboratório Cisco Packet Tracer](laboratorio.pkt)
