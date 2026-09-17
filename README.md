@@ -1,173 +1,277 @@
-# Lab 01 — Cliente sem Internet
-
-## Cenário
-
-Uma empresa cliente de um provedor de Internet entrou em contato informando que estava sem acesso à Internet.
-
-### Cliente
-
-- Empresa: Empresa Alfa
-- Serviço: Internet
-- Velocidade contratada: 500 Mbps
-- Prioridade: Alta
-- Status inicial: Em aberto
-
-## Objetivo
-
-Investigar a indisponibilidade de Internet utilizando uma abordagem de troubleshooting por etapas, identificar os pontos de falha, realizar as correções necessárias e validar a conectividade ponta a ponta.
-
-## Topologia
-
-![Topologia da rede](topologia.png)
-
-## Equipamentos
-
-- 1 PC
-- 1 Switch Cisco 2960
-- 3 Routers Cisco ISR 4331
-- 1 Server
-
-## Endereçamento IP
-
-| Equipamento | Interface | Endereço IP | Máscara | Função |
-|---|---|---|---|---|
-| PC1 | NIC | 192.168.10.10 | 255.255.255.0 | Cliente |
-| Router Cliente | G0/0/0 | 192.168.10.1 | 255.255.255.0 | Gateway LAN |
-| Router Cliente | G0/0/1 | 203.0.113.2 | 255.255.255.252 | WAN |
-| Router ISP | G0/0/0 | 203.0.113.1 | 255.255.255.252 | WAN |
-| Router ISP | G0/0/1 | 198.51.100.1 | 255.255.255.252 | Upstream |
-| Router Internet | G0/0/0 | 198.51.100.2 | 255.255.255.252 | Upstream |
-| Router Internet | G0/0/1 | 8.8.8.1 | 255.255.255.0 | Rede externa |
-| Server | NIC | 8.8.8.8 | 255.255.255.0 | Destino |
-
-## Investigação
-
-### Teste 1 — PC1 → Gateway
-
-Comando:
-
-`ping 192.168.10.1`
-
-Resultado: 100% de sucesso.
-
-Conclusão: a comunicação entre o PC1 e o gateway local estava funcionando.
-
-### Teste 2 — Router Cliente → Router ISP
-
-Comando:
-
-`ping 203.0.113.1`
-
-Resultado: 100% de sucesso.
-
-Conclusão: o enlace WAN entre o Router Cliente e o Router ISP estava funcionando.
-
-### Teste 3 — Router ISP → Router Internet
-
-Comando:
-
-`ping 198.51.100.2`
-
-Resultado: 100% de sucesso.
-
-Conclusão: o enlace entre o Router ISP e o Router Internet estava funcionando.
-
-## Falhas identificadas
-
-### 1. Ausência de rota padrão no Router Cliente
-
-Foi identificado:
-
-`Gateway of last resort is not set`
-
-Correção:
-
-`ip route 0.0.0.0 0.0.0.0 203.0.113.1`
-
-### 2. Gateway incorreto no Server
-
-O gateway do Server estava incorreto.
-
-Foi corrigido para:
-
-`8.8.8.1`
-
-### 3. Ausência de rota para a rede do cliente no Router ISP
-
-Correção:
-
-`ip route 192.168.10.0 255.255.255.0 203.0.113.2`
-
-### 4. Ausência de rota de retorno no Router Internet
-
-Correção:
-
-`ip route 192.168.10.0 255.255.255.0 198.51.100.1`
-
-## Evidências
-
-As capturas abaixo documentam as principais etapas da investigação.
-
-### 01 — PC1 → Gateway
-
-![PC1 pingando o gateway](evidencias/01-pc-gateway.png)
-
-### 02 — Router Cliente → Router ISP
-
-![Router Cliente pingando o Router ISP](evidencias/02-cliente-isp.png)
-
-### 03 — Router ISP → Router Internet
-
-![Router ISP pingando o Router Internet](evidencias/03-isp-internet.png)
-
-### 04 — Tabela de roteamento
-
-![Tabela de roteamento do Router Cliente](evidencias/04-show-ip-route.png)
-
-### 05 — Falha de conectividade
-
-![Falha de conectividade](evidencias/05-falha.png)
-
-### 06 — Validação final
-
-![Validação final da conectividade](evidencias/06-validacao-final.png)
-
-## Validação final
-
-No PC1:
-
-`ping 8.8.8.8`
-
-Resultado: Reply.
-
-A conectividade ponta a ponta foi restabelecida.
-
-## Diagnóstico final
-
-O problema envolvia múltiplas falhas de configuração de roteamento e gateway.
-
-Foram identificados:
-
-- ausência de rota padrão no Router Cliente;
-- gateway incorreto no Server;
-- ausência de rota para a LAN do cliente no Router ISP;
-- ausência de rota de retorno no Router Internet.
-
-## Competências praticadas
+## Laboratórios
+
+| Laboratório | Cenário | Status |
+|---|---|---|
+| [Lab 01 — Cliente sem Internet](labs/lab-01-cliente-sem-internet/) | Diagnóstico de indisponibilidade de Internet | ✅ Concluído |
+| Lab 02 — Gateway incorreto | Diagnóstico de configuração de gateway | ⬜ |
+| Lab 03 — Máscara incorreta | Diagnóstico de endereçamento IPv4 | ⬜ |
+| Lab 04 — Falha de roteamento | Diagnóstico de rotas e encaminhamento | ⬜ |
+| Lab 05 — Problema de DNS | Diagnóstico de resolução de nomes | ⬜ |
+
+## Lab 01 — Cliente sem Internet
+
+O primeiro laboratório simula uma empresa cliente de um provedor de Internet que informa ao suporte estar sem acesso à Internet.
+
+Durante a investigação foram utilizados testes de conectividade, análise de interfaces, análise de tabelas de roteamento, configuração de rotas estáticas e validação ponta a ponta.
+
+### Principais pontos investigados
+
+- Comunicação entre o PC e o gateway.
+- Comunicação entre o Router Cliente e o Router ISP.
+- Comunicação entre o Router ISP e o Router Internet.
+- Existência de rotas para redes externas.
+- Configuração do gateway do servidor.
+- Existência de rotas de retorno para a rede do cliente.
+- Validação final da comunicação entre o cliente e o servidor.
+
+### Resultado
+
+Após a identificação e correção das falhas de configuração, o PC1 conseguiu alcançar o servidor `8.8.8.8`.
+
+[Ver o Lab 01 completo →](labs/lab-01-cliente-sem-internet/)
+
+## Estrutura do projeto
+
+```text
+telecom-support-lab/
+│
+├── README.md
+│
+├── labs/
+│   ├── lab-01-cliente-sem-internet/
+│   │   ├── README.md
+│   │   ├── comandos.txt
+│   │   ├── laboratorio.pkt
+│   │   ├── topologia.PNG
+│   │   └── evidencias/
+│   │       ├── README.md
+│   │       ├── 01-pc-gateway.png
+│   │       ├── 02-cliente-isp.png
+│   │       ├── 03-isp-internet.png
+│   │       ├── 04-show-ip-route.png
+│   │       ├── 05-falha.png
+│   │       └── 06-validacao-final.png
+│   │
+│   ├── lab-02/
+│   ├── lab-03/
+│   └── ...
+│
+└── docs/
+    ├── metodologia-troubleshooting.md
+    └── enderecamento-ip.md ```text
+```
+
+# Competências Desenvolvidas
+
+## Redes
 
 - IPv4
 - Endereçamento IP
+- Máscaras de rede
 - Gateway
-- ICMP
-- Ping
-- Cisco IOS
-- Tabela de roteamento
-- Rota estática
+- LAN e WAN
+- Roteamento
+- Rotas estáticas
 - Rota padrão
 - Rota de retorno
+- ICMP
+
+## Troubleshooting
+
+- Isolamento de falhas
+- Análise de evidências
+- Testes de conectividade
+- Formulação de hipóteses
+- Diagnóstico técnico
+- Correção controlada
+- Validação pós-correção
+- Análise do caminho de ida e retorno
+
+## Cisco IOS
+
+- `show ip interface brief`
+- `show ip route`
+- `ping`
+- `configure terminal`
+- `interface`
+- `ip address`
+- `ip route`
+- `no shutdown`
+
+# Metodologia de Troubleshooting
+
+Os laboratórios deste projeto seguem uma abordagem sistemática de investigação de problemas de rede.
+
+## Processo
+
+1. Identificar o problema.
+2. Coletar evidências.
+3. Testar a conectividade.
+4. Isolar o ponto de falha.
+5. Formular uma hipótese.
+6. Alterar uma variável por vez.
+7. Validar a correção.
+8. Documentar o resultado.
+
+## Fluxo de troubleshooting
+
+**Problema → Evidência → Hipótese → Teste → Diagnóstico → Correção → Validação**
+
+## Princípios utilizados
+
+### Trabalhar com evidências
+
+As decisões são baseadas nos resultados dos testes realizados, evitando conclusões sem evidência técnica.
+
+### Isolar o problema
+
+O caminho da comunicação é dividido em segmentos para identificar em qual ponto ocorre a falha.
+
+### Alterar uma variável por vez
+
+Durante a correção, evita-se realizar várias mudanças simultaneamente. Isso facilita identificar qual alteração resolveu o problema ou provocou um novo comportamento.
+
+### Validar após a correção
+
+Uma configuração não é considerada concluída apenas porque foi aplicada. É necessário realizar novos testes e confirmar o funcionamento esperado.
+
+### Registrar o diagnóstico
+
+O problema, os testes realizados, a hipótese, a correção e o resultado final devem ser documentados.
+
+# Documentação dos Laboratórios
+
+Cada laboratório do projeto pode ser documentado seguindo uma estrutura padronizada.
+
+## Estrutura
+
+### 1. Cenário do incidente
+
+Descrição do problema apresentado.
+
+Exemplo:
+
+> Cliente informa que está sem acesso à Internet.
+
+### 2. Objetivo
+
+Descrever o que precisa ser investigado e validado.
+
+### 3. Topologia
+
+Apresentar os equipamentos, conexões e estrutura da rede.
+
+### 4. Endereçamento IP
+
+Registrar os endereços IP, máscaras, gateways e interfaces utilizadas.
+
+### 5. Testes realizados
+
+Registrar os comandos utilizados e seus respectivos resultados.
+
+Exemplo:
+
+```text
+ping 192.168.10.1
+
+Resultado:
+
+!!!!!
+Success rate is 100 percent (5/5)
+```
+
+### 6. Evidências
+
+Registrar capturas de tela relevantes da investigação.
+
+### 7. Hipóteses investigadas
+
+Documentar as possíveis causas consideradas durante o diagnóstico.
+
+### 8. Diagnóstico
+
+Identificar a causa ou conjunto de causas encontradas.
+
+### 9. Correções aplicadas
+
+Registrar as alterações realizadas para solucionar o problema.
+
+### 10. Validação final
+
+Realizar os testes finais para confirmar que o problema foi resolvido.
+
+### 11. Resultado
+
+Registrar o estado final do laboratório.
+
+### 12. Lições aprendidas
+
+Registrar os principais conceitos e conhecimentos obtidos durante o laboratório.
+
+# Progresso do Projeto
+
+## Fundamentos de Redes
+
+| Área | Status |
+|---|---|
+| IPv4 | ✅ |
+| Gateway e conectividade | ✅ |
+| Ping / ICMP | ✅ |
+| Tabela de roteamento | ✅ |
+| Rota padrão | ✅ |
+| Rotas estáticas | ✅ |
+| Troubleshooting básico | ✅ |
+| VLAN | ⬜ |
+| DHCP | ⬜ |
+| DNS | ⬜ |
+| NAT | ⬜ |
+| ACL | ⬜ |
+| OSPF | ⬜ |
+
+## Suporte e Infraestrutura
+
+| Área | Status |
+|---|---|
+| Diagnóstico de conectividade | ✅ |
+| Identificação de falhas | ✅ |
+| Análise de evidências | ✅ |
+| Documentação técnica | ✅ |
+| Simulação de atendimento N1 | ⬜ |
+| Cenários de NOC | ⬜ |
+| Cenários de ISP | ⬜ |
+| Monitoramento | ⬜ |
+
+## Laboratórios
+
+| Laboratório | Status |
+|---|---|
+| Lab 01 — Cliente sem Internet | ✅ |
+| Lab 02 — Gateway incorreto | ⬜ |
+| Lab 03 — Máscara incorreta | ⬜ |
+| Lab 04 — Falha de roteamento | ⬜ |
+| Lab 05 — Problema de DNS | ⬜ |
+
+
+# Autora
+
+## Alinne Fernanda Costa
+
+Estudante de Ciência da Computação e Técnica em Informática em formação.
+
+Este projeto faz parte da minha formação prática e tem como objetivo desenvolver conhecimentos aplicados em:
+
+- Suporte Técnico
+- Redes de Computadores
+- Telecomunicações
+- Infraestrutura
 - Troubleshooting
-- Validação ponta a ponta
+- NOC
+- Provedores de Internet
 
-## Arquivo do laboratório
+## Objetivo profissional
 
-[Baixar laboratório Cisco Packet Tracer](laboratorio.pkt)
+Desenvolver experiência prática e construir uma base técnica para atuação nas áreas de Suporte Técnico, Redes, Telecomunicações, NOC e Infraestrutura.
+
+## GitHub
+
+[@Alinnefcc](https://github.com/Alinnefcc)
