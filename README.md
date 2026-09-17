@@ -106,23 +106,31 @@ Correção:
 
 ## Evidências
 
-As capturas utilizadas durante a investigação estão disponíveis em:
+As capturas abaixo documentam as principais etapas da investigação.
 
-[evidencias/](evidencias/)
+### 01 — PC1 → Gateway
 
-### Principais evidências
+![PC1 pingando o gateway](evidencias/01-pc-gateway.png)
 
-[01 — PC1 → Gateway](evidencias/01-pc-gateway.png)
+### 02 — Router Cliente → Router ISP
 
-[02 — Router Cliente → Router ISP](evidencias/02-cliente-isp.png)
+![Router Cliente pingando o Router ISP](evidencias/02-cliente-isp.png)
 
-[03 — Router ISP → Router Internet](evidencias/03-isp-internet.png)
+### 03 — Router ISP → Router Internet
 
-[04 — Tabela de roteamento](evidencias/04-show-ip-route.png)
+![Router ISP pingando o Router Internet](evidencias/03-isp-internet.png)
 
-[05 — Falha de conectividade](evidencias/05-falha.png)
+### 04 — Tabela de roteamento
 
-[06 — Validação final](evidencias/06-validacao-final.png)
+![Tabela de roteamento do Router Cliente](evidencias/04-show-ip-route.png)
+
+### 05 — Falha de conectividade
+
+![Falha de conectividade](evidencias/05-falha.png)
+
+### 06 — Validação final
+
+![Validação final da conectividade](evidencias/06-validacao-final.png)
 
 ## Validação final
 
