@@ -3,7 +3,7 @@
 | Laboratório | Cenário | Status |
 |---|---|---|
 | [Lab 01 — Cliente sem Internet](labs/lab-01-cliente-sem-internet/) | Diagnóstico de indisponibilidade de Internet | ✅ Concluído |
-| Lab 02 — Gateway incorreto | Diagnóstico de configuração de gateway | ⬜ |
+| [Lab 02 — Gateway incorreto](labs/lab-02-gateway-incorreto/) | Diagnóstico de configuração de gateway | ✅ Concluído |
 | Lab 03 — Máscara incorreta | Diagnóstico de endereçamento IPv4 | ⬜ |
 | Lab 04 — Falha de roteamento | Diagnóstico de rotas e encaminhamento | ⬜ |
 | Lab 05 — Problema de DNS | Diagnóstico de resolução de nomes | ⬜ |
@@ -52,7 +52,16 @@ telecom-support-lab/
 │   │       ├── 05-falha.png
 │   │       └── 06-validacao-final.png
 │   │
-│   ├── lab-02/
+│   └── lab-02-gateway-incorreto/
+        ├── README.md
+        ├── laboratorio.pkt
+        ├── topologia.PNG
+        └── evidencias/
+            ├── README.md
+            ├── 05-falha-gateway.png
+            └── 06-validacao-final.png
+│   │  
+│   │ 
 │   ├── lab-03/
 │   └── ...
 │
@@ -246,7 +255,7 @@ Registrar os principais conceitos e conhecimentos obtidos durante o laboratório
 | Laboratório | Status |
 |---|---|
 | Lab 01 — Cliente sem Internet | ✅ |
-| Lab 02 — Gateway incorreto | ⬜ |
+| Lab 02 — Gateway incorreto | ✅ |
 | Lab 03 — Máscara incorreta | ⬜ |
 | Lab 04 — Falha de roteamento | ⬜ |
 | Lab 05 — Problema de DNS | ⬜ |
